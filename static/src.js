@@ -32,8 +32,15 @@ async function postJson(url, data={})
 
 async function localAccountData(){
 	let uid = document.getElementById("siema").value;
+	let nickname = localStorage.getItem('username')
 	console.log(uid)
-	let response = await postJson("/local_data", {"uid": uid})
+	let response = await postJson("/local_data", {"uid": uid, "nickname": nickname})
 	console.log(response)
-	document.getElementById("mail").textContent = response.email;
+}
+
+async function skipSong(){
+	console.log('enio')
+	let nickname = localStorage.getItem('username')
+	let response = await postJson("/vote_skip", {"nickname": nickname})
+	console.log(response)
 }

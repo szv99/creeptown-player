@@ -1,15 +1,146 @@
-siema eniu
+<script src="https://cdn.tailwindcss.com"></script>
+
+<h1 id="nickname"></h1>
+
 
 <input id="siema">
 
 </input>
 <button type="button" id="buttonAdd" onclick="localAccountData()">Add song</button>
 
+<div class="row w-3/5">
 
+    <div class="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6">
+        <div>
+            <div class="relative w-full h-80 bg-white rounded-lg overflow-hidden group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
+                <img id="songImage" src="https://i.imgur.com/GhElDZp.png" class="w-full h-full object-center object-cover">
+            </div>
+            <h3 class="mt-6 text-sm text-gray-500">
+                Dodał:
+                <span id="nickName"></span>
+                
+            </h3>
+            <a href="" id="songHref">
+              <p class="text-base font-semibold text-gray-900" id="songName">Nic nie gra 😁</p>
+            </a> 
+            <button onclick="skipSong()" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+              Skip
+            </button>
+        </div>
+    </div>
+    </div>
+    
+<div class="row w-3/5">
 
-
-
-<h1 id="mail">
-    song
-</h1>
+    <div class="flex flex-col">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kolejka</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dodane piosenki:</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                    <th scope="col" class="relative px-6 py-3">
+                      <span class="sr-only">Edit</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="songsQueue" class="bg-white divide-y divide-gray-200">
+      
+                  <!-- More people... -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
 <script src="src.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+
+<script>
+    const ws = io('ws://localhost:7071', {
+      transports: ['websocket']
+      });
+
+      ws.on('addedSong', function(guwno){
+        pierdolony = document.getElementById('songsQueue')
+        console.log(guwno)
+        if (typeof(element) != 'undefined' && element != null)
+        {
+          
+        }else {
+        pierdolony.innerHTML += `
+        <tr id="${guwno.songId}">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10">
+                          <img class="h-10 w-10 rounded-full" src="${guwno.thumbnailUrl}" alt="">
+                        </div>
+                        <div class="ml-4">
+                          <div class="text-sm font-medium text-gray-900">${guwno.title}</div>
+                          <a href="${guwno.songUrl}">
+                          <div class="text-sm text-gray-500">Link</div>
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900" id="">Length</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> Dodał: ${guwno.username} </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <a href="#" class="text-indigo-600 hover:text-indigo-900">Vote skip</a>
+                    </td>
+                  </tr>
+                  `
+        }
+        
+    })
+
+
+    let username = localStorage.getItem("username")
+    
+    function valueIsSet(value)
+    {
+        return (value && value !== "")
+    }
+    
+    do {
+        if(username === null){
+            username = prompt("Please enter your name");
+            localStorage.setItem('username', username)
+        }
+    }while (!valueIsSet(username)) 
+
+    if (localStorage.getItem("username") != null) {
+            document.getElementById("nickname").innerHTML = `Ahoj!, ${username}, Hvala wam...`
+            ws.emit('userJoined', username)
+        }
+
+
+    ws.on('deleteDiv', function(guwno){
+        console.log('siema')
+        document.getElementById(guwno.songId).remove()
+    })
+
+
+      ws.on('playSong', function(guwno){
+        if(guwno.artist === undefined){
+            console.log('asdsagfs')
+            document.getElementById('songImage').src = guwno.thumbnailUrl
+            document.getElementById('songName').innerText = guwno.title
+            document.getElementById('songHref').href = guwno.songUrl
+            document.getElementById('nickName').innerText = `${guwno.username}`
+        }
+        console.log(guwno)
+      })
+//https://img.youtube.com/vi/3w8pR1ihXOI/0.jpg
+
+
+</script>
