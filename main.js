@@ -6,6 +6,7 @@ const YTDlpWrap = require('yt-dlp-wrap').default;
 const ytDlpWrap = new YTDlpWrap('C:/ProgramData/chocolatey/bin/yt-dlp.exe');
 const bodyParser = require('body-parser');
 const httpServer = require("http").createServer();
+const fs = require('fs')
 const io = require("socket.io")(httpServer, {
   // ...
 });
@@ -90,6 +91,12 @@ async function addSong(songArray){
     "songUrl": songLink,
     "username": songArray.userNickname
   }
+
+  let songHistory = JSON.parse(fs.readFileSync('./history.json'))
+
+  songHistory.push(songInfo)
+
+  fs.writeFileSync('./history.json', JSON.stringify(songHistory))
 
   if(songLink.includes('youtube.com') || songLink.includes('youtu.be')){
     id = getVideoId(songLink)
