@@ -94,6 +94,10 @@ async function addToHistory(songJSON){
 
 }
 
+async function clearQueueFile(){
+  fs.writeFileSync('./queue.json', '[]')
+}
+
 async function removeFromQueue(){
   let songQueue = JSON.parse(fs.readFileSync('./queue.json'))
 
@@ -131,6 +135,8 @@ async function addSong(songArray){
     id = getVideoId(songLink)
     console.log(songLink + id)
     songInfo.thumbnailUrl = `https://img.youtube.com/vi/${id}/0.jpg`
+  }else if(songLink.includes('soundcloud')){
+    songInfo.thumbnailUrl = metadata.thumbnail
   }
   
   addToHistory(songInfo)
@@ -276,5 +282,5 @@ async function onSpawnExit(){
     playSong(songs[0])
   }
 }
-
+clearQueueFile()
 httpServer.listen(7071);

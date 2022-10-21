@@ -7,12 +7,12 @@ let metadata = await ytDlpWrap.getVideoInfo(songLink)
 
 const uniqueSongId = crypto.randomUUID()
 
-console.log(metadata)
 
 let songInfo = {
   "title": metadata.title,
   "artist": metadata.artist,
-  "songId": uniqueSongId
+  "songId": uniqueSongId,
+  "thumbnail": metadata.thumbnail
 }
 
 console.log(songInfo)
