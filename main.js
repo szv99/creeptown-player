@@ -90,7 +90,7 @@ async function addToHistory(songJSON){
 
   songQueue.push(songJSON)
 
-  fs.writeFileSync('./queue.json', JSON.stringify(songHistory))
+  fs.writeFileSync('./queue.json', JSON.stringify(songQueue))
 
 }
 
