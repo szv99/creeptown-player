@@ -44,3 +44,8 @@ async function skipSong(){
 	let response = await postJson("/vote_skip", {"nickname": nickname})
 	console.log(response)
 }
+
+async function fetchQueue(){
+	let response = await postJson("/get_queue")
+	return response
+}

@@ -67,9 +67,41 @@ app.post("/local_data", async (req, res) =>
 	addSong(songArray)
 })
 
+app.post("/get_queue", async (req, res) =>
+{
+  let songQueue = JSON.parse(fs.readFileSync('./queue.json'))
+
+  res.json(songQueue)
+})
+
 function getVideoId(input) {
   return input.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/user\/\S+|\/ytscreeningroom\?v=|\/sandalsResorts#\w\/\w\/.*\/))([^\/&]{10,12})/)[1]; 
   }
+
+
+async function addToHistory(songJSON){
+  let songHistory = JSON.parse(fs.readFileSync('./history.json'))
+
+  songHistory.push(songInfo)
+
+  fs.writeFileSync('./history.json', JSON.stringify(songHistory))
+
+  let songQueue = JSON.parse(fs.readFileSync('./queue.json'))
+
+  songQueue.push(songInfo)
+
+  fs.writeFileSync('./queue.json', JSON.stringify(songHistory))
+
+}
+
+async function removeFromQueue(){
+  let songQueue = JSON.parse(fs.readFileSync('./queue.json'))
+
+  songQueue.shift()
+
+  fs.writeFileSync('./queue.json', JSON.stringify(songQueue))
+}
+
 
 async function addSong(songArray){
   let songLink = songArray.linkToSong
@@ -92,11 +124,9 @@ async function addSong(songArray){
     "username": songArray.userNickname
   }
 
-  let songHistory = JSON.parse(fs.readFileSync('./history.json'))
+  addToHistory(songInfo)
 
-  songHistory.push(songInfo)
 
-  fs.writeFileSync('./history.json', JSON.stringify(songHistory))
 
   if(songLink.includes('youtube.com') || songLink.includes('youtu.be')){
     id = getVideoId(songLink)
@@ -238,6 +268,7 @@ async function onSpawnError(data){
 }
 
 async function onSpawnExit(){
+  removeFromQueue()
   io.emit('deleteDiv', songs[0])
   songs.shift()
   if(songs.length === 0){

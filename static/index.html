@@ -67,7 +67,16 @@
       });
 
       ws.on('addedSong', function(guwno){
-        pierdolony = document.getElementById('songsQueue')
+        addToQueue(guwno)
+        
+    })
+
+
+    let username = localStorage.getItem("username")
+    
+
+    function addToQueue(guwno){
+      pierdolony = document.getElementById('songsQueue')
         console.log(guwno)
         if (typeof(element) != 'undefined' && element != null)
         {
@@ -100,12 +109,9 @@
                   </tr>
                   `
         }
-        
-    })
+    }
 
 
-    let username = localStorage.getItem("username")
-    
     function valueIsSet(value)
     {
         return (value && value !== "")
@@ -140,6 +146,13 @@
         }
         console.log(guwno)
       })
+
+      let queuedSongs = fetchQueue()
+
+      for (const siema of queuedSongs){
+        addToQueue(siema)
+      }
+
 //https://img.youtube.com/vi/3w8pR1ihXOI/0.jpg
 
 
