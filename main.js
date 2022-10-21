@@ -82,13 +82,13 @@ function getVideoId(input) {
 async function addToHistory(songJSON){
   let songHistory = JSON.parse(fs.readFileSync('./history.json'))
 
-  songHistory.push(songInfo)
+  songHistory.push(songJSON)
 
   fs.writeFileSync('./history.json', JSON.stringify(songHistory))
 
   let songQueue = JSON.parse(fs.readFileSync('./queue.json'))
 
-  songQueue.push(songInfo)
+  songQueue.push(songJSON)
 
   fs.writeFileSync('./queue.json', JSON.stringify(songHistory))
 
@@ -124,16 +124,16 @@ async function addSong(songArray){
     "username": songArray.userNickname
   }
 
-  addToHistory(songInfo)
-
-
-
+  
+  
+  
   if(songLink.includes('youtube.com') || songLink.includes('youtu.be')){
     id = getVideoId(songLink)
     console.log(songLink + id)
     songInfo.thumbnailUrl = `https://img.youtube.com/vi/${id}/0.jpg`
-    }
+  }
   
+  addToHistory(songInfo)
   io.emit('addedSong', songInfo)
 
   let ytDlpEventEmitter = ytDlpWrap

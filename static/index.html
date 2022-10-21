@@ -147,11 +147,17 @@
         console.log(guwno)
       })
 
-      let queuedSongs = fetchQueue()
 
-      for (const siema of queuedSongs){
-        addToQueue(siema)
+      async function appendQueue(){
+        let queuedSongs = await fetchQueue()
+
+
+        for (var i = 0; i < queuedSongs.length; i++){
+          addToQueue(queuedSongs[i])
+        }
       }
+
+appendQueue()
 
 //https://img.youtube.com/vi/3w8pR1ihXOI/0.jpg
 
